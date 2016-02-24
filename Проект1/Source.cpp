@@ -6,7 +6,7 @@
 #include <string>
 #include <d3d9.h>
 #include <ctime>
-#include <ObjReader.h>
+#include "ObjReader.h"
 #pragma comment (lib, "d3d9.lib")
 using namespace std;
 
