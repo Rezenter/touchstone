@@ -1,4 +1,4 @@
-#resolution
+//resolution
 //0 = 800x600
 //1 = 1024 x 768
 //2 = 1152 x 864
@@ -9,9 +9,10 @@
 //7 = 1680 x 1050
 //8 = 1920 x 1080
 //9 = 1920 x 1200
+//10 = native
 resolutionValue
-3
+10
 
-#FPS limit
+//FPS limit
 FPS
 60

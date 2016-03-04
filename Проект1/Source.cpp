@@ -6,13 +6,16 @@
 #include <string>
 #include <d3d9.h>
 #include <ctime>
+#include <io.h>
 #include "ObjReader.h"
+#include "Log.h"
+
 #pragma comment (lib, "d3d9.lib")
 using namespace std;
 
-LPDIRECT3D9 d3d;    // the pointer to our Direct3D interface
-LPDIRECT3DDEVICE9 d3ddev;    // the pointer to the device class
-LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    // the pointer to the vertex buffer
+LPDIRECT3D9 d3d;    
+LPDIRECT3DDEVICE9 d3ddev;    
+LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;    
 
 int HEIGHT;
 int WIGHT;
@@ -21,10 +24,10 @@ DWORD LastFrameTime = 0;
 DWORD FPSLimit;
 DWORD currentTime;
 
-void initD3D(HWND hWnd);    // sets up and initializes Direct3D
-void render_frame(void);    // renders a single frame
-void cleanD3D(void);    // closes Direct3D and releases memory
-void init_graphics(void);    // 3D declarations
+void initD3D(HWND hWnd);
+void render_frame(void);
+void cleanD3D(void);
+void init_graphics(void);
 
 struct CUSTOMVERTEX { FLOAT X, Y, Z, RHW; DWORD COLOR; };
 #define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
@@ -48,12 +51,22 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
+	Log log("log.txt");
 	ObjReader a(OBJ_PATH + "probe" + ".obj");
+	a.createModel();
 	int resolution = 0;
 	ifstream file;
+	if (_access("config.txt", 0) == -1) {
+		log.write("config not found");
+		return 0;
+	}
 	file.open("config.txt");
+	log.write("config opened");
 	string line;
-	Resolution availableResolutions[10] = {
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+	Resolution availableResolutions[11] = {
 	Resolution(800, 600),
 	Resolution(1024, 768),
 	Resolution(1152, 864),
@@ -63,7 +76,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	Resolution(1440, 900),
 	Resolution(1680, 1050),
 	Resolution(1920, 1080),
-	Resolution(1920, 1200)
+	Resolution(1920, 1200),
+	Resolution(desktop.right, desktop.bottom)
 	};
 	while (getline(file, line)) {
 		istringstream iss(line);
@@ -71,11 +85,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			getline(file, line);
 			istringstream iss(line);
 			resolution = stoi(iss.str());
+			string resol = to_string(availableResolutions[resolution].h) + "x"
+				+ to_string(availableResolutions[resolution].w);
+			log.write("resolution = " + resol);
 		}
 		else if(iss.str() == "FPS"){
 			getline(file, line);
 			istringstream iss(line);
 			FPSLimit = stoi(iss.str());
+			log.write("fps limit = " + to_string(FPSLimit));
 		}
 	}
 	file.close();
@@ -124,8 +142,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	// this struct holds Windows event messages
 	MSG msg;
 
+	
+
 	while (TRUE)
 	{
+		//*****************************************************************************************************************
+		msg.message = WM_QUIT;
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
@@ -142,6 +164,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	cleanD3D();
 
 	return msg.wParam;
+	
 }
 
 // this is the main message handler for the program

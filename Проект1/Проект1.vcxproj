@@ -118,6 +118,7 @@
     <Text Include="config.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Log.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjReader.h" />
   </ItemGroup>

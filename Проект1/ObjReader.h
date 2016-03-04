@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include "Model.h"
+#include "Log.h"
 
 #pragma once
 
@@ -20,17 +21,29 @@ private:
 public:
 	ObjReader(string path)
 	{
-		file.open(path);
-		while (getline(file, line)) {
-			istringstream iss(line);
-			line = iss.str();
-			if (line.substr(0, 7) == "mtlib ") {
-				mtlib = line.substr(8);
-			}
-			else if (line.substr(0, 1) == "#") {
-				int i = 0;
+		Log log("objReaderLog.txt");
+		log.write("constructor(" + path + ")");
+		if (_access(path.c_str(), 0) == -1) {
+			log.write("file not found");
+		}
+		else {
+			file.open(path);
+			while (getline(file, line)) {
+				istringstream iss(line);
+				line = iss.str();
+				if (line.substr(0, 7) == "mtlib ") {
+					mtlib = line.substr(8);
+				}
+				else if (line.substr(0, 1) == "#") {
+					int i = 0;
+				}
 			}
 		}
+	}
+
+	void createModel() {
+
+
 	}
 
 	~ObjReader()
