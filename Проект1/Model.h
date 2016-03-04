@@ -1,18 +1,51 @@
 #include <string>
+#include <vector>
 
 #pragma once
 using namespace std;
+
+class Object
+{
+private:
+	string name;
+
+public:
+
+	Object() {
+		name = "null";
+	}
+
+	Object(string n) {
+		name = n;
+	}
+
+	~Object()
+	{
+
+	}
+};
 
 class Model
 {
 private:
 	string matLibrary;
+	string name;
 
 public:
+	
+	vector <Object> objects;
 
-	Model(string matL)
+	Model() {
+		name = "uninitialised";
+	}
+	
+	Model(string n)
 	{
-		matLibrary = matL;
+		name = n;
+	}
+
+	string getName() {
+		return name;
 	}
 
 	~Model()
@@ -20,4 +53,6 @@ public:
 
 	}
 };
+
+
 

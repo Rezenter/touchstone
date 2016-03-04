@@ -16,34 +16,37 @@ class ObjReader
 private:
 	ifstream file;
 	string line;
-	string mtlib;
+	string mtllib;
+	string name;
+	Model res;
 
 public:
-	ObjReader(string path)
+	ObjReader(string path, string n)
 	{
+		Model res(name);
+		name = n;
 		Log log("objReaderLog.txt");
-		log.write("constructor(" + path + ")");
-		if (_access(path.c_str(), 0) == -1) {
-			log.write("file not found");
+		log.write("constructor(" + path + name + ".obj)");
+		if (_access((path + name + ".obj").c_str(), 0) == -1) {
+			log.write("obj not found");
 		}
 		else {
-			file.open(path);
+			int i = 0;
+			log.write("obj found");
+			file.open(path + name + ".obj");
 			while (getline(file, line)) {
-				istringstream iss(line);
-				line = iss.str();
-				if (line.substr(0, 7) == "mtlib ") {
-					mtlib = line.substr(8);
+				if (line.substr(0, 7) == "mtllib ") {
+					mtllib = line.substr(7);
 				}
-				else if (line.substr(0, 1) == "#") {
-					int i = 0;
+				else if (line.substr(0, 9) == "# object ") {
+					res.objects.push_back(Object(line.substr(9)));
 				}
 			}
 		}
 	}
 
-	void createModel() {
-
-
+	Model getModel() {
+		return res;
 	}
 
 	~ObjReader()

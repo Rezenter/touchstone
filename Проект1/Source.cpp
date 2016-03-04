@@ -19,7 +19,7 @@ LPDIRECT3DVERTEXBUFFER9 v_buffer = NULL;
 
 int HEIGHT;
 int WIGHT;
-string OBJ_PATH = "C:\\Users\\res\\Desktop\\";
+string OBJ_PATH = "d:\\msvs15\\Projects\\Проект1\\Проект1\\objects\\";
 DWORD LastFrameTime = 0;
 DWORD FPSLimit;
 DWORD currentTime;
@@ -52,8 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	int nCmdShow)
 {
 	Log log("log.txt");
-	ObjReader a(OBJ_PATH + "probe" + ".obj");
-	a.createModel();
+	ObjReader a(OBJ_PATH, "triangle2a");
 	int resolution = 0;
 	ifstream file;
 	if (_access("config.txt", 0) == -1) {
