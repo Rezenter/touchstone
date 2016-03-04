@@ -1,0 +1,4 @@
+Fri Mar  4 03:45:48 2016: 
+Fri Mar  4 03:45:48 2016: config opened
+Fri Mar  4 03:45:48 2016: resolution = 900x1600
+Fri Mar  4 03:45:48 2016: fps limit = 60
